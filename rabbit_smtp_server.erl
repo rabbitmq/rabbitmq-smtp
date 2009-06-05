@@ -70,11 +70,10 @@ delivery(_ReversePath, ForwardPaths, DataLines) ->
 deliver(Status, [], _Message) ->
     Status;
 deliver(Status, [Path | Rest], Message) ->
-    case rabbit_exchange:simple_publish(false,
-					false,
-					Message#basic_message{exchange_name = exchange_name(Path),
-							      routing_key = <<>>}) of
-	{ok, _} -> deliver(Status, Rest, Message);
+    case rabbit_basic:publish(false, false, none,
+                              Message#basic_message{exchange_name = exchange_name(Path),
+                                                    routing_key = <<>>}) of
+	{ok, _, _} -> deliver(Status, Rest, Message);
 	_ -> deliver(one_or_more_deliveries_failed, Rest, Message)
     end.
 
