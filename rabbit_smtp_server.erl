@@ -25,8 +25,8 @@
 
 -module(rabbit_smtp_server).
 
--include_lib("rabbitmq_server/include/rabbit.hrl").
--include_lib("rabbitmq_server/include/rabbit_framing.hrl").
+-include("rabbit.hrl").
+-include("rabbit_framing.hrl").
 
 -export([start/0]).
 
@@ -70,9 +70,10 @@ delivery(_ReversePath, ForwardPaths, DataLines) ->
 deliver(Status, [], _Message) ->
     Status;
 deliver(Status, [Path | Rest], Message) ->
-    case rabbit_basic:publish(false, false, none,
-                              Message#basic_message{exchange_name = exchange_name(Path),
-                                                    routing_key = <<>>}) of
+    case rabbit_basic:publish(
+           rabbit_basic:delivery(false, false, none,
+                                 Message#basic_message{exchange_name = exchange_name(Path),
+                                                       routing_key = <<>>})) of
 	{ok, _, _} -> deliver(Status, Rest, Message);
 	_ -> deliver(one_or_more_deliveries_failed, Rest, Message)
     end.
