@@ -23,17 +23,19 @@
 %% SOFTWARE.
 %%---------------------------------------------------------------------------
 
--module(rabbit_smtp_server).
+-module(rabbitmq_smtp_server).
+
+-behaviour(application).
 
 -include("rabbit.hrl").
 -include("rabbit_framing.hrl").
 
--export([start/0]).
+-export([start/2, stop/1]).
 
 %% Callbacks.
 -export([delivery/3, verify_new_rcpt/2]).
 
-start() ->
+start(normal, []) ->
     generic_tcp_server:start_link(smtp_server_session, "0.0.0.0", 8025,
 				  [list,
 				   {active, false},
@@ -41,6 +43,9 @@ start() ->
 				   {reuseaddr, true}],
 				  [{?MODULE, delivery, []},
 				   {?MODULE, verify_new_rcpt, []}]).
+
+stop(_State) ->
+    ok.
 
 vhost_map(<<"localhost">>) -> <<"/">>;
 vhost_map(X) -> X.
