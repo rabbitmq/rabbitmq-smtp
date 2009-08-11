@@ -1,0 +1,2 @@
+^ebin/.*\.beam$
+^plugin-include\.mk$
