@@ -27,8 +27,8 @@
 
 -behaviour(application).
 
--include("rabbit.hrl").
--include("rabbit_framing.hrl").
+-include_lib("rabbit_common/include/rabbit.hrl").
+-include_lib("rabbit_common/include/rabbit_framing.hrl").
 
 -export([start/2, stop/1]).
 
@@ -36,7 +36,9 @@
 -export([delivery/3, verify_new_rcpt/2]).
 
 start(normal, []) ->
-    generic_tcp_server:start_link(smtp_server_session, "0.0.0.0", 8025,
+    {ok, Host} = application:get_env(listen_host),
+    {ok, Port} = application:get_env(listen_port),
+    generic_tcp_server:start_link(smtp_server_session, Host, Port,
 				  [list,
 				   {active, false},
 				   {packet, line},

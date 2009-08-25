@@ -1,2 +1,11 @@
 ^ebin/.*\.beam$
 ^plugin-include\.mk$
+^build$
+^dist$
+^deps/erlang-smtp/ebin$
+^deps/erlang-smtp/include$
+^deps/erlang-smtp/erlang-smtp\.ez$
+
+^tmp/.*\.(LOG|DCD|DAT)$
+^tmp/rabbit_persister\.LOG(|\.previous)$
+^tmp/rabbit_serial$

@@ -1,11 +1,10 @@
 PACKAGE=rabbitmq-smtp
-DEPS=rabbitmq-server erlang-smtp
+DEPS=rabbitmq-server rabbitmq-erlang-client
+INTERNAL_DEPS=erlang-smtp
+TEST_APPS=rabbitmq_smtp_server
+START_RABBIT_IN_TESTS=true
 
-include plugin-include.mk
+include ../include.mk
 
-plugin-include.mk:
-	curl http://hg.rabbitmq.com/rabbitmq-public-umbrella/raw-file/default/include.mk > $@
-
-distclean: clean
-	rm -rf $(DIST_DIR)
-	rm -f plugin-include.mk
+clean::
+	rm -rf tmp
