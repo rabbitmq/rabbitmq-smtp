@@ -49,16 +49,46 @@ start(normal, []) ->
 stop(_State) ->
     ok.
 
-vhost_map(<<"localhost">>) -> <<"/">>;
-vhost_map(X) -> X.
+vhost_map(Domain) ->
+    {ok, Map} = application:get_env(vhost_map),
+    case lists:keysearch(Domain, 1, Map) of
+        false ->
+            case application:get_env(default_vhosts) of
+                true ->
+                    list_to_binary(Domain);
+                false ->
+                    not_found
+            end;
+        {value, {_, VHostBin}} ->
+            {ok, VHostBin}
+    end.
 
-exchange_name({Mailbox, VHost}) ->
-    rabbit_misc:r(vhost_map(list_to_binary(VHost)), exchange, list_to_binary(Mailbox)).
+split_mailbox(Mailbox) ->
+    case string:str(Mailbox, "-") of
+        0 ->
+            {Mailbox, ""};
+        N ->
+            {string:substr(Mailbox, 1, N - 1), string:substr(Mailbox, N + 1)}
+    end.
+
+map_mailbox({Mailbox, Domain}) ->
+    case vhost_map(Domain) of
+        {ok, VHost} ->
+            {Name, RK} = split_mailbox(Mailbox),
+            {ok, rabbit_misc:r(VHost, exchange, list_to_binary(Name)), list_to_binary(RK)};
+        not_found ->
+            not_found
+    end.
 
 verify_new_rcpt(_ReversePath, [Path | _Rest]) ->
-    case rabbit_exchange:lookup(exchange_name(Path)) of
-	{ok, _} -> ok;
-	{error, not_found} -> not_found
+    case map_mailbox(Path) of
+        {ok, XName, _RK} ->
+            case rabbit_exchange:lookup(XName) of
+                {ok, _} -> ok;
+                {error, not_found} -> not_found
+            end;
+        not_found ->
+            not_found
     end.
 
 delivery(_ReversePath, ForwardPaths, DataLines) ->
@@ -77,12 +107,17 @@ delivery(_ReversePath, ForwardPaths, DataLines) ->
 deliver(Status, [], _Message) ->
     Status;
 deliver(Status, [Path | Rest], Message) ->
-    case rabbit_basic:publish(
-           rabbit_basic:delivery(false, false, none,
-                                 Message#basic_message{exchange_name = exchange_name(Path),
-                                                       routing_key = <<>>})) of
-	{ok, _, _} -> deliver(Status, Rest, Message);
-	_ -> deliver(one_or_more_deliveries_failed, Rest, Message)
+    case map_mailbox(Path) of
+        {ok, XName, RK} ->
+            case rabbit_basic:publish(
+                   rabbit_basic:delivery(false, false, none,
+                                         Message#basic_message{exchange_name = XName,
+                                                               routing_key = RK})) of
+                {ok, _, _} -> deliver(Status, Rest, Message);
+                _ -> deliver(one_or_more_deliveries_failed, Rest, Message)
+            end;
+        not_found ->
+            deliver(one_or_more_deliveries_failed, Rest, Message)
     end.
 
 add_header({Key, Value}, P = #'P_basic'{headers = H}) ->
