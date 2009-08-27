@@ -3,7 +3,7 @@
   {vsn, "0.0"},
   {modules,[rabbitmq_smtp_server]},
   {registered, []},
-  {applications,[kernel,stdlib]},
+  {applications,[kernel,stdlib,rabbit]},
   {mod, {rabbitmq_smtp_server, []}},
   {env, [{listen_host, "0.0.0.0"},
 	 {listen_port, 8025},
