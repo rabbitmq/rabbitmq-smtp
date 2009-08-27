@@ -1,3 +1,4 @@
+require 'rubygems'
 require 'socket'
 require 'timeout'
 require 'bunny'
