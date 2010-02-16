@@ -84,7 +84,7 @@ describe "RabbitMQ SMTP Adapter" do
         command(conn, "Subject: Test Message\r\n\r\nHello World\r\nAnd again!\r\n.")
       end
 
-      msg = wait_for_message(q)
+      msg = wait_for_message(q)[:payload]
       msg.should == "Hello World\r\nAnd again!\r\n"
     end
   end
