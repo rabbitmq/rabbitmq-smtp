@@ -32,9 +32,80 @@ all goes well) in the presence of
 `rabbitmq-smtp/dist/erlang-smtp.ez`. The plugins can then be activated
 as per [the instructions][pluginguide].
 
+## Mapping between SMTP and AMQP
+
+When an email arrives at the adapter, its SMTP "To" address is
+examined to determine how it should be routed through the
+system. First, the address is split into a mailbox name and a domain
+part. The mailbox name is then split at the first hyphen into two
+pieces.
+
+ - the domain part (e.g. "`@rabbitmq.com`") is used to map to an AMQP virtual-host
+ - if the mailbox name contained a hyphen,
+    - the first part of the name is mapped to an AMQP exchange name, and
+    - the second part is mapped to an AMQP routing key
+ - otherwise, if no hyphen was present in the mailbox name, the whole
+   mailbox name is used as the AMQP exchange name, and the AMQP
+   routing key is set to the empty string.
+
+For example, `tonyg@rabbitmq.com` is mapped to
+
+ - the virtual host configured in the `vhost_map` (see below on configuration) for `rabbitmq.com`
+ - the exchange "`tonyg`"
+ - the routing key ""
+
+and `tonyg-foo@rabbitmq.com` is mapped to
+
+ - the virtual host configured in the `vhost_map` for `rabbitmq.com`
+ - the exchange "`tonyg`"
+ - the routing key "`foo`"
+
 ## Configuring the plugin
 
-(tbd)
+The plugin is configured using the normal Erlang application
+configuration mechanism. RabbitMQ has a [standard configuration
+file](http://www.rabbitmq.com/install.html#configfile) that can be
+used to configure the plugin. The application name is
+`rabbitmq_smtp_server`, and the individual keys are described below.
+
+Here is an example snippet of a RabbitMQ configuration file containing
+`rabbitmq_smtp_server` settings:
+
+    ...
+    {rabbitmq_smtp_server, vhost_map, [{"localhost", <<"/">>}]},
+    {rabbitmq_smtp_server, default_vhosts, true},
+    {rabbitmq_smtp_server, listen_port, 8025},
+    ...
+
+## Configuring the way SMTP domains are mapped to AMQP virtual-hosts
+
+Two configuration variables control this process. The first,
+`vhost_map`, should be set to a list of tuples with the first element
+set to a string for the domain to map from, and the second element set
+to a *binary* for the virtual-host to map to. For example, the default
+value for `vhost_map` is
+
+    [{"localhost", <<"/">>}]
+
+which maps the SMTP "`@localhost`" domain onto the usual preconfigured
+virtual-host "`/`".
+
+In cases where the plugin searches for a domain in the `vhost_map` but
+cannot find one, the second configuration variable, `default_vhosts`
+is consulted. If it is set to the atom `true`, then the SMTP domain is
+used *directly* as the name of the AMQP virtual-host. If it is set to
+the atom `false`, then the plugin will instead return an error for
+uses of the missing domain.
+
+## Configuring the IP address and port number that the plugin listens on
+
+Two configuration variables are used here:
+
+ - `listen_host`, which should be set to a string containing an IP
+   address. The default setting is `"0.0.0.0"`.
+
+ - `listen_port`, which should be set to an integer containing a TCP
+   port number. The default setting is `8025`.
 
 ## Example session
 
