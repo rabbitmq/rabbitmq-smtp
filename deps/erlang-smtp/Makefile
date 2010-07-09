@@ -23,7 +23,7 @@ $(LIB_PACKAGE_DIR): $(CHECKOUT_DIR)
 	cp -r $< $@
 
 $(CHECKOUT_DIR):
-	git clone git://github.com/tonyg/erlang-smtp $@
+	git clone http://github.com/tonyg/erlang-smtp.git $@
 
 %.ez: $(LIB_PACKAGE_DIR)
 	$(MAKE) -C $(LIB_PACKAGE_DIR) clean all
