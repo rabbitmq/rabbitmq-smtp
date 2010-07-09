@@ -2,6 +2,8 @@
 ^plugin-include\.mk$
 ^build$
 ^dist$
+^deps/erlang-smtp/erlang-smtp$
+^deps/erlang-smtp/erlang-smtp-git$
 ^deps/erlang-smtp/ebin$
 ^deps/erlang-smtp/include$
 ^deps/erlang-smtp/erlang-smtp\.ez$

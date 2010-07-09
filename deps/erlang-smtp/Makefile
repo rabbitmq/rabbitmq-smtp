@@ -5,7 +5,7 @@ LIB_PACKAGE=erlang-smtp
 LIB_PACKAGE_DIR=$(LIB_PACKAGE)
 LIB_PACKAGE_NAME=$(LIB_PACKAGE).ez
 
-CHECKOUT_DIR=$(LIB_PACKAGE_DIR)-hg
+CHECKOUT_DIR=$(LIB_PACKAGE_DIR)-git
 
 TARGETS=$(LIB_PACKAGE_NAME)
 
@@ -23,7 +23,7 @@ $(LIB_PACKAGE_DIR): $(CHECKOUT_DIR)
 	cp -r $< $@
 
 $(CHECKOUT_DIR):
-	hg clone http://hg.opensource.lshift.net/erlang-smtp $@
+	git clone git://github.com/tonyg/erlang-smtp $@
 
 %.ez: $(LIB_PACKAGE_DIR)
 	$(MAKE) -C $(LIB_PACKAGE_DIR) clean all
