@@ -99,13 +99,8 @@ delivery(_ReversePath, ForwardPaths, DataLines) ->
     Properties = lists:foldr(fun add_header/2,
 			     #'P_basic'{headers = []},
 			     Headers),
-    Message =
-	#basic_message{content =
-		       #content{class_id = element(1, rabbit_framing:method_id('basic.publish')),
-				properties = Properties,
-				properties_bin = none,
-				payload_fragments_rev = [list_to_binary(BodyLines)]}},
-    deliver(ok, ForwardPaths, Message).
+    Content = rabbit_basic:build_content(Properties, list_to_binary(BodyLines)),
+    deliver(ok, ForwardPaths, #basic_message{content = Content}).
 
 deliver(Status, [], _Message) ->
     Status;
