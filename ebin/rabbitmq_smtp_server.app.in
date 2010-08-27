@@ -1,6 +1,6 @@
 {application,rabbitmq_smtp_server,
  [{description,"RabbitMQ SMTP Server"},
-  {vsn, "0.0"},
+  {vsn, "%%VSN%%"},
   {modules,[rabbitmq_smtp_server]},
   {registered, []},
   {applications,[kernel,stdlib,rabbit]},
