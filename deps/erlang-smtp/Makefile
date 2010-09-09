@@ -1,7 +1,11 @@
+UPSTREAM_GIT=http://github.com/tonyg/erlang-smtp.git
+# You need to update the website when you change the revision.
+REVISION=69e2621aa334669d3241
+
 EBIN_DIR=ebin
 INCLUDE_DIR=include
 
-LIB_PACKAGE=erlang-smtp
+LIB_PACKAGE=erlang-smtp-$(REVISION)
 LIB_PACKAGE_DIR=$(LIB_PACKAGE)
 LIB_PACKAGE_NAME=$(LIB_PACKAGE).ez
 
@@ -23,7 +27,8 @@ $(LIB_PACKAGE_DIR): $(CHECKOUT_DIR)
 	cp -r $< $@
 
 $(CHECKOUT_DIR):
-	git clone http://github.com/tonyg/erlang-smtp.git $@
+	git clone $(UPSTREAM_GIT) $@
+	(cd $@ && git checkout $(REVISION)) || rm -rf $@
 
 %.ez: $(LIB_PACKAGE_DIR)
 	$(MAKE) -C $(LIB_PACKAGE_DIR) clean all
