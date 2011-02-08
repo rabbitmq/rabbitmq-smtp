@@ -1,8 +1,5 @@
-^ebin/.*\.beam$
-^dist$
-^ebin/rabbitmq_smtp_server.app$
-^deps.mk$
-
-^tmp/.*\.(LOG|DCD|DAT)$
-^tmp/rabbit_persister\.LOG(|\.previous)$
-^tmp/rabbit_serial$
+~$
+\.beam$
+^build/
+^dist/
+^cover/
