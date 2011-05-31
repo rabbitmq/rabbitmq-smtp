@@ -110,7 +110,8 @@ deliver(Status, [Path | Rest], Message) ->
             case rabbit_basic:publish(
                    rabbit_basic:delivery(false, false, none,
                                          Message#basic_message{exchange_name = XName,
-                                                               routing_key = RK})) of
+                                                               routing_keys = [RK]},
+                                         undefined)) of
                 {ok, _, _} -> deliver(Status, Rest, Message);
                 _ -> deliver(one_or_more_deliveries_failed, Rest, Message)
             end;
