@@ -1,6 +1,3 @@
-**Repository [moved to GitHub](https://github.com/rabbitmq/rabbitmq-smtp)**.
-This is a stale read-only repository.
-
 # RabbitMQ-SMTP, an SMTP receiver plugin for RabbitMQ
 
 The RabbitMQ-SMTP plugin listens on a configurable TCP port for
