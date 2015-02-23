@@ -1,10 +1,18 @@
-# RabbitMQ-SMTP, an SMTP receiver plugin for RabbitMQ
+# RabbitMQ-SMTP, a Legacy SMTP receiver plugin for RabbitMQ
+
+## Legacy Software Warning
+
+`rabbitmq-stmqp` **hasn't seen updates in more than 3 years**.
+
+It has since been superseded by [rabbitmq-email](https://github.com/gotthardp/rabbitmq-email).
+Please consider using that project first.
+
+
+## What It Does
 
 The RabbitMQ-SMTP plugin listens on a configurable TCP port for
 incoming email message traffic, and routes the traffic on via
-RabbitMQ's exchanges. A normal AMQP (or STOMP, or Comet, or
-PubSubHubBub, or XMPP) connection can be used to configure routing and
-to retrieve messages as usual.
+RabbitMQ's exchanges.
 
 There is no support at this time for sending outgoing email from
 RabbitMQ.
