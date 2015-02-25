@@ -2,7 +2,7 @@
 
 ## Legacy Software Warning
 
-`rabbitmq-stmqp` **hasn't seen updates in more than 3 years**.
+`rabbitmq-smtp` **has not seen updates in more than 3 years and will not work with recent versions of RabbitMQ**.
 
 It has since been superseded by [rabbitmq-email](https://github.com/gotthardp/rabbitmq-email).
 Please consider using that project first.
