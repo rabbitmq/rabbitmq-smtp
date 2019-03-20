@@ -28,12 +28,12 @@ You will need:
 Once you are able to build the server and its plugins, you can build
 the SMTP plugin. Within the `rabbitmq-public-umbrella` directory,
 
-    hg clone http://hg.rabbitmq.com/rabbitmq-smtp
+    hg clone https://hg.rabbitmq.com/rabbitmq-smtp
     cd rabbitmq-smtp
     make
 
 At this point, the `Makefile` will retrieve a copy of
-[erlang-smtp](http://hg.opensource.lshift.net/erlang-smtp/) if it
+[erlang-smtp](https://bitbucket.org/lshift/erlang-smtp/) if it
 hasn't done so already. It will then compile everything, resulting (if
 all goes well) in the presence of
 `rabbitmq-smtp/dist/rabbitmq-smtp.ez` and
@@ -72,7 +72,7 @@ and `tonyg-foo@rabbitmq.com` is mapped to
 
 The plugin is configured using the normal Erlang application
 configuration mechanism. RabbitMQ has a [standard configuration
-file](http://www.rabbitmq.com/install.html#configfile) that can be
+file](https://www.rabbitmq.com/install.html#configfile) that can be
 used to configure the plugin. The application name is
 `rabbitmq_smtp_server`, and the individual keys are described below.
 
@@ -144,4 +144,4 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-  [pluginguide]: http://www.rabbitmq.com/plugin-development.html
+  [pluginguide]: https://www.rabbitmq.com/plugin-development.html
